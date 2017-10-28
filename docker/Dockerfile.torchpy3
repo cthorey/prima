@@ -1,0 +1,71 @@
+FROM pytorch/pytorch:latest
+
+MAINTAINER clement thorey <cthorey@xihelm.com>
+
+RUN apt-get update &&\
+    apt-get install -y --no-install-recommends build-essential &&\
+    apt-get install -y --no-install-recommends curl &&\
+    apt-get install -y --no-install-recommends git &&\
+    apt-get install -y pandoc &&\
+    rm -rf /var/lib/apt/lists/*
+
+# ############################
+# # OpenCV installation
+# ############################
+
+RUN apt-get update &&\
+    apt-get install -y python-opencv
+
+############################
+# python package
+############################
+
+WORKDIR /tmp
+
+RUN apt-get update &&\
+    apt-get install -y python-opencv
+
+RUN pip install --upgrade h5py &&\
+    pip install --upgrade pandas &&\
+    pip install --upgrade -i setuptools &&\
+    pip install --upgrade pillow &&\
+    pip install tqdm &&\
+    pip install boltons &&\
+    pip install seaborn &&\
+    pip install scikit-image &&\
+    pip install git+git://github.com/sensout/oscar-python.git &&\
+    pip install cython &&\
+    pip install tabulate &&\
+    pip install redis &&\
+    pip install easydict &&\
+    pip install cython &&\
+    pip install folium &&\
+    pip install keras &&\
+    pip install update jupyter &&\
+    pip install imageio &&\
+    pip install moviepy &&\
+    pip install pytube &&\
+    pip install pydot-ng &&\
+    pip install jupyter --upgrade &&\
+    pip install ruamel.yaml &&\
+    pip install git+git://github.com/richardhenry/hotqueue.git &&\
+
+# COCO - necessary even if we are using our own custom version 
+RUN git clone https://github.com/pdollar/coco.git &&\
+    cd coco/PythonAPI &&\
+    python setup.py install
+
+ADD imageio.py /tmp/imagio.py
+RUN python /tmp/imagio.py
+
+############################
+# Workir
+############################
+
+
+
+RUN mkdir "/workdir"
+WORKDIR "/workdir"
+
+COPY jupyter_notebook_config.py /root/.jupyter/
+CMD ["/run_jupyter.sh"]

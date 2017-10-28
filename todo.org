@@ -1,0 +1,9 @@
+* WORKING PLAN
+
+** Make sur the iterator is working properly
+
+It should be able to return stuff.
+
+** TODO ADD PARAMETERS TO SELECT AN ARBITRARY NUMBER OF FRAMES
+dezdez
+** DO SO
