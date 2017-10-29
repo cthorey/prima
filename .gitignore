@@ -1,3 +1,5 @@
+models
+!src/models
 *.pyc
 data
 notebook*

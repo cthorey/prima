@@ -51,44 +51,44 @@ class Dataset(object):
         else:
             self.num_frames = 30
 
-        # for tracking errors
+        # # for tracking errors
         self.bad_videos = []
 
-        # training and validation
-        self.X_train, self.X_val, self.y_train, self.y_val = self.split_training_into_validation(
-        )
+        # # training and validation
+        # self.X_train, self.X_val, self.y_train, self.y_val = self.split_training_into_validation(
+        # )
 
-        # params of data based on training data
-        self.num_classes = self.y_train.shape[1]
-        self.class_names = self.y_train.columns.values
-        assert self.num_classes == self.y_val.shape[1]
-        self.num_samples = self.y_train.shape[0]
-        self.num_batches = self.num_samples // self.batch_size
+        # # params of data based on training data
+        # self.num_classes = self.y_train.shape[1]
+        # self.class_names = self.y_train.columns.values
+        # assert self.num_classes == self.y_val.shape[1]
+        # self.num_samples = self.y_train.shape[0]
+        # self.num_batches = self.num_samples // self.batch_size
 
-        # test paths and prediction matrix
-        self.X_test_ids, self.predictions = self.prepare_test_data_and_prediction(
-        )
+        # # test paths and prediction matrix
+        # self.X_test_ids, self.predictions = self.prepare_test_data_and_prediction(
+        # )
 
-        # variables to make batch generating easier
-        self.batch_idx = cycle(range(self.num_batches))
-        self.batch_num = next(self.batch_idx)
+        # # variables to make batch generating easier
+        # self.batch_idx = cycle(range(self.num_batches))
+        # self.batch_num = next(self.batch_idx)
 
-        self.num_val_batches = self.y_val.shape[0] // self.batch_size
-        self.val_batch_idx = cycle(range(self.num_val_batches))
-        self.val_batch_num = next(self.val_batch_idx)
+        # self.num_val_batches = self.y_val.shape[0] // self.batch_size
+        # self.val_batch_idx = cycle(range(self.num_val_batches))
+        # self.val_batch_num = next(self.val_batch_idx)
 
-        self.num_test_samples = self.X_test_ids.shape[0]
-        self.num_test_batches = self.num_test_samples // self.batch_size
-        self.test_batch_idx = cycle(range(self.num_test_batches))
-        self.test_batch_num = next(self.test_batch_idx)
+        # self.num_test_samples = self.X_test_ids.shape[0]
+        # self.num_test_batches = self.num_test_samples // self.batch_size
+        # self.test_batch_idx = cycle(range(self.num_test_batches))
+        # self.test_batch_num = next(self.test_batch_idx)
 
-        # for testing iterator in test_mode
-        self.train_data_seen = pd.DataFrame(
-            data={'seen': 0}, index=self.y_train.index)
+        # # for testing iterator in test_mode
+        # self.train_data_seen = pd.DataFrame(
+        #     data={'seen': 0}, index=self.y_train.index)
 
-        # test the generator
-        if test:
-            self._test_batch_generator()
+        # # test the generator
+        # if test:
+        #     self._test_batch_generator()
 
     def prepare_test_data_and_prediction(self):
         """

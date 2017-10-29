@@ -3,4 +3,3 @@ import sys
 
 ROOT_DIR = os.environ['ROOT_DIR']
 sys.path.append(ROOT_DIR)
-sys.path.append(os.path.join(ROOT_DIR, 'src', 'data'))

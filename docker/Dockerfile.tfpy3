@@ -9,13 +9,6 @@ RUN apt-get update &&\
     apt-get install -y pandoc &&\
     rm -rf /var/lib/apt/lists/*
 
-# ############################
-# # OpenCV installation
-# ############################
-
-RUN apt-get update &&\
-    apt-get install -y python-opencv
-
 ############################
 # python package
 ############################
@@ -40,11 +33,19 @@ RUN pip install --upgrade pandas &&\
 RUN pip install imageio &&\
     pip install moviepy &&\
     pip install pytube &&\
-    pip install scikit-video &&\
     pip install pydot-ng &&\
-    pip install jupyter --upgrade
+    pip install jupyter --upgrade &&\
+    pip install opencv-contrib-python &&\
+    pip install sk-video &&\
+    pip install python-box &&\
+    pip install future
 
+RUN apt-get install -y python3-tk
 RUN pip install --upgrade h5py cython
+
+RUN add-apt-repository -y ppa:jonathonf/ffmpeg-3 &&\
+    apt update &&\
+    apt install -y ffmpeg libav-tools x264 x265
 
 ############################
 # Workir
