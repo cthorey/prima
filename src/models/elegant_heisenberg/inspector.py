@@ -23,6 +23,7 @@ class PriMatrixInspector(object):
         self.data = data
         self.model = model
         self.project = 'prima'
+        self.modeltype = 'models'
 
     def gen_prediction(self, split='train', batch_size=16):
         """
@@ -86,12 +87,12 @@ class PriMatrixInspector(object):
         return score.mean()
 
     def detailed_report(self, train, val, test=None):
-        p = ojoin(ROOT_DIR, 'reports', self.model.model_task,
+        p = ojoin(ROOT_DIR, 'reports', self.modeltype, self.model.model_task,
                   self.model.model_name)
         self._mkdir_recursive(p)
-        fname = ojoin(ROOT_DIR, 'reports', self.model.model_task,
-                      self.model.model_name, '{}.md'.format(
-                          self.model.expname))
+        fname = ojoin(ROOT_DIR, 'reports', self.modeltype,
+                      self.model.model_task, self.model.model_name,
+                      '{}.md'.format(self.model.expname))
         with open(fname, 'w+') as f:
             f.write('# Best model \n\n')
             f.write('- model task : {} \n'.format(self.model.model_task))
@@ -145,7 +146,7 @@ class PriMatrixInspector(object):
             os.mkdir(path)
 
     def summary_report(self, train, val, test=None, ref='clement'):
-        p = ojoin(ROOT_DIR, 'reports', self.model.model_task,
+        p = ojoin(ROOT_DIR, 'reports', self.modeltype, self.model.model_task,
                   self.model.model_name)
         self._mkdir_recursive(p)
 
@@ -163,7 +164,7 @@ class PriMatrixInspector(object):
             report='[report]({})'.format(
                 ojoin(
                     'https://github.com/cthorey/{0}/blob/master/reports/{1}/{2}/{3}.md'.
-                    format(self.project, self.model.model_task,
+                    format(self.project, self.modeltype, self.model.model_task,
                            self.model.model_name, self.model.expname))),
             description=self.model.model_description,
             created=time.strftime("%d/%m/%Y"))
@@ -179,9 +180,9 @@ class PriMatrixInspector(object):
             index=None)
         df.to_csv(
             ojoin(
-                ojoin(ROOT_DIR, 'reports', self.model.model_task,
-                      self.model.model_name, 'reports_{}.csv'.format(
-                          self.model.expname))),
+                ojoin(ROOT_DIR, 'reports', self.modeltype,
+                      self.model.model_task, self.model.model_name,
+                      'reports_{}.csv'.format(self.model.expname))),
             index=None)
 
     def save_report(self, ref='clement'):
