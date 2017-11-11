@@ -1,6 +1,7 @@
 from os.path import join as ojoin
 
 from keras.preprocessing.image import *
+from PIL import Image
 from src.data.coco_video import COCOPriMatrix
 
 
@@ -75,13 +76,25 @@ class VideoDataGenerator(ImageDataGenerator):
             transform_matrix = zoom_matrix if transform_matrix is None else np.dot(
                 transform_matrix, zoom_matrix)
 
+        horizontal_flip = False
+        if self.horizontal_flip:
+            if np.random.random() < 0.5:
+                horizontal_flip = True
+
+        vertical_flip = False
+        if self.vertical_flip:
+            if np.random.random() < 0.5:
+                vertical_flip = True
+
+        if transform_matrix is not None:
+            h, w = x[0].shape[img_row_axis], x[0].shape[img_col_axis]
+            transform_matrix = transform_matrix_offset_center(
+                transform_matrix, h, w)
+
         arr = []
         for i in range(x.shape[0]):
             u = x[i]
             if transform_matrix is not None:
-                h, w = x.shape[img_row_axis], x.shape[img_col_axis]
-                transform_matrix = transform_matrix_offset_center(
-                    transform_matrix, h, w)
                 u = apply_transform(
                     u,
                     transform_matrix,
@@ -92,13 +105,11 @@ class VideoDataGenerator(ImageDataGenerator):
             if self.channel_shift_range != 0:
                 u = random_channel_shift(u, self.channel_shift_range,
                                          img_channel_axis)
-            if self.horizontal_flip:
-                if np.random.random() < 0.5:
-                    u = flip_axis(u, img_col_axis)
+            if horizontal_flip:
+                u = flip_axis(u, img_col_axis - 1)
 
-            if self.vertical_flip:
-                if np.random.random() < 0.5:
-                    u = flip_axis(u, img_row_axis)
+            if vertical_flip:
+                u = flip_axis(u, img_row_axis - 1)
             arr.append(u)
         x = np.stack(arr)
 
@@ -112,10 +123,9 @@ class VideoDataGenerator(ImageDataGenerator):
             The inputs, normalized.
         """
         arr = []
+
         for i in range(u.shape[0]):
             x = u[i]
-            if self.preprocessing_function:
-                x = self.preprocessing_function(x)
             if self.rescale:
                 x *= self.rescale
             if self.samplewise_center:
@@ -176,7 +186,7 @@ class VideoDataIterator(Iterator):
                  directory,
                  data_generator,
                  split,
-                 target_size=(224, 224),
+                 target_size=(16, 64, 64, 3),
                  batch_size=32,
                  shuffle=True,
                  seed=None):
@@ -189,6 +199,7 @@ class VideoDataIterator(Iterator):
         self.filenames = self.data.getImgIds()
         self.nb_sample = len(self.filenames)
         self.num_classes = len(self.data.cats)
+        self.target_size = target_size
         self.num_frames = self.data.fdata['data'].shape[1]
         self.width = self.data.fdata['data'].shape[2]
         self.height = self.data.fdata['data'].shape[3]
@@ -203,13 +214,22 @@ class VideoDataIterator(Iterator):
 
         # The transformation of images is not under thread lock so it can be
         # done in parallel
-        batch_x = np.zeros((current_batch_size, ) +
-                           self.data.fdata['data'].shape[1:])
+        batch_x = np.zeros((current_batch_size, ) + self.target_size)
         batch_y = np.zeros((current_batch_size, ) + (len(self.data.cats), ))
 
         # build batch of image data
         for i, j in enumerate(index_array):
             video = self.data.fdata['data'][j]
+            if video.shape[0] != self.target_size[0]:
+                video = video[:self.target_size[0]]
+            if video.shape[1:] != self.target_size[1:]:
+                video = np.stack([
+                    np.array(
+                        Image.fromarray(video[i].astype('uint8')).resize(
+                            self.target_size[1:-1]))
+                    for i in range(len(video))
+                ])
+
             video = self.data_generator.random_transform(video)
             video = self.data_generator.standardize(video)
 

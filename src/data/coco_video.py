@@ -69,7 +69,8 @@ class COCOPriMatrix():
         :return:
         """
         for key, value in self.dataset['info'].items():
-            print('{}: {}'.format(key, value))
+            if self.verbose:
+                print('{}: {}'.format(key, value))
             setattr(self, key, value)
 
     def getVidData(self, video_ids):

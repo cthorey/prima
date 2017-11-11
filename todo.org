@@ -1,9 +1,18 @@
 * WORKING PLAN
 
-** Make sur the iterator is working properly
+** TODO It should be able to return stuff.
 
-It should be able to return stuff.
+** TODO Make sur the iterator is working properly
+** TODO Train a model elegant benchmark on the 224/224 images
 
-** TODO ADD PARAMETERS TO SELECT AN ARBITRARY NUMBER OF FRAMES
+   Benchnmark using the same model as the driven data team
+
+** TODO Write an inspector which can easily compute metrics on the validation set.
+
+** TODO Train a model using VGG16 instead as a feature extractor
+
+   1. Train a model only on the meta data
+
+** DONE ADD PARAMETERS TO SELECT AN ARBITRARY NUMBER OF FRAMES
+   CLOSED: [2017-11-11 Sat 12:29]
 dezdez
-** DO SO

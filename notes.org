@@ -1,0 +1,4 @@
+* Tasks
+** TODO 
+   [2017-11-11 Sat]
+   [[file:/ssh:cthorey@35.195.74.74:/home/cthorey/pri-matrix/todo.org::*Train%20a%20model%20using%20VGG16%20instead%20as%20a%20feature%20extractor][Train a model using VGG16 instead as a feature extractor]]

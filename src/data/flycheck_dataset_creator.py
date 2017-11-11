@@ -45,7 +45,7 @@ class DatasetCreator(object):
         if split_idd is True, then take every frame as idpt
         if not, take into acocunt the time.
         """
-        N = 1500
+        N = 5000
         cls = df.columns[1:].tolist()
         dfs = []
         for cl in cls:
@@ -60,9 +60,7 @@ class DatasetCreator(object):
             test_size=self.val_size,
             random_state=self.seed)
         train = df[df.filename.isin(train_idx)]
-        train.index = range(len(train))
         validation = df[df.filename.isin(validation_idx)]
-        validation.index = range(len(validation))
         return train, validation
 
     def init_folder(self, overwrite=False):
@@ -169,7 +167,7 @@ class DatasetCreator(object):
 
         total = len(data)
         if self.overfit:
-            total = 50
+            total = 200
         for i, row in tqdm(data.iterrows(), total=total):
             img = dict()
             img['id'] = idx
@@ -211,5 +209,5 @@ class DatasetCreator(object):
 
 
 if __name__ == '__main__':
-    dataset = DatasetCreator('d1', dataset_type='prima', overfit=True)
+    dataset = DatasetCreator('d1', dataset_type='prima')
     dataset.create_dataset()

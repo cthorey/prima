@@ -28,20 +28,14 @@ class Data(object):
     def __init__(self, data_name):
         self.data_name = data_name
         self.data_folder = os.path.join(ROOT_DIR, 'data', 'interim', data_name)
-        self.train = COCOPriMatrix(
-            annotation_file=ojoin(self.data_folder, 'annotations',
-                                  'instances_train.json'),
-            verbose=True)
-        self.validation = COCOPriMatrix(
-            annotation_file=ojoin(self.data_folder, 'annotations',
-                                  'instances_validation.json'),
-            verbose=True)
+        self.train = COCOPriMatrix(annotation_file=ojoin(
+            self.data_folder, 'annotations', 'instances_train.json'))
+        self.validation = COCOPriMatrix(annotation_file=ojoin(
+            self.data_folder, 'annotations', 'instances_validation.json'))
         if os.path.isfile(
                 ojoin(self.data_folder, 'annotations', 'instances_test.json')):
-            self.test = COCOPriMatrix(
-                annotation_file=ojoin(self.data_folder, 'annotations',
-                                      'instances_test.json'),
-                verbose=True)
+            self.test = COCOPriMatrix(annotation_file=ojoin(
+                self.data_folder, 'annotations', 'instances_test.json'))
 
     def pprint(self, m):
         print('*' * 50)
@@ -125,7 +119,7 @@ class Data(object):
                       gen,
                       split='train',
                       batch_size=32,
-                      target_size=(64, 64),
+                      target_size=(16, 64, 64, 3),
                       shuffle=True,
                       seed=293,
                       **kwargs):

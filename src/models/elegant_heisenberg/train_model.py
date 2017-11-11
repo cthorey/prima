@@ -17,7 +17,7 @@ if __name__ == '__main__':
     """
     Train a model for regression
     """
-    data = Data(data_name='micro_d1_overfit')
+    data = Data(data_name='prima_d1_500')
     model = Model(
         model_task='video_classification',
         model_name='elegant_heisenberg',
@@ -49,19 +49,19 @@ if __name__ == '__main__':
             base_lr=0.0005, max_lr=0.006, step_size=2000., mode='triangular2'),
         reducelr=None,
         write_graph=True,
-        write_images=True)
+        write_images=False)
     data_config = dict(
-        base_augmentation=dict(),
+        base_augmentation=dict(rescale=1. / 255, ),
         train_aug_specific=dict(
-            rotation_range=40,
-            width_shift_range=0.2,
-            height_shift_range=0.2,
-            rescale=1. / 255,
-            shear_range=0.2,
-            zoom_range=0.2,
+            rotation_range=15,
+            width_shift_range=0.05,
+            height_shift_range=0.05,
+            shear_range=0.1,
+            zoom_range=0.1,
             horizontal_flip=True,
+            vertical_flip=True,
             fill_mode='nearest'),
-        batch_size=4,
+        batch_size=2,
         shuffle=True)
 
     # setup

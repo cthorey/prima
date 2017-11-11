@@ -28,7 +28,7 @@ class Model(BaseModel):
                  model_description="",
                  stage='training',
                  bmodel=None,
-                 input_shape=(64, 64, 3),
+                 input_shape=(224, 224, 3),
                  expname=None,
                  weights_file='min',
                  serve_model_from=None,
