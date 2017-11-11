@@ -6,8 +6,8 @@ import keras.backend as K
 import tensorflow as tf
 from ai_platform.src.model import pretrained_models
 from ai_platform.src.model.common.base_model import *
-from keras.layers import (Conv2D, Dense, Dropout, Flatten, MaxPooling2D,
-                          TimeDistributed)
+from keras.layers import (Activation, BatchNormalization, Conv2D, Dense,
+                          Dropout, Flatten, MaxPooling2D, TimeDistributed)
 from keras.layers.recurrent import LSTM
 from keras.models import Sequential, model_from_json
 from PIL import Image
@@ -29,7 +29,7 @@ class Model(BaseModel):
                  model_description="Based on RESNET 50",
                  stage='training',
                  bmodel=None,
-                 input_shape=(16, 224, 224, 3),
+                 input_shape=(224, 224, 3),
                  expname=None,
                  weights_file='min',
                  serve_model_from=None,
@@ -98,49 +98,40 @@ class Model(BaseModel):
         preds = np.vstack(preds)
         return preds
 
-    def load_model(self, input_shape, num_classes, *args, **kwargs):
+    def load_head(self,
+                  plug_on_top=True,
+                  nb_neuron=2048,
+                  num_classes=24,
+                  **kwargs):
 
-        model = Sequential()
+        if plug_on_top is not None:
+            base = plug_on_top
+            input_data = base.output
+        else:
+            base = self.load_basemodel(**kwargs)
+            input_data = Input(shape=base.output_shape[1:], name='Input')
 
-        # add three time-distributed convolutional layers for feature extraction
-        model.add(
-            TimeDistributed(
-                Conv2D(64, (3, 3), activation='relu'),
-                input_shape=input_shape))
-        model.add(TimeDistributed(MaxPooling2D((2, 2), strides=(1, 1))))
-        model.add(TimeDistributed(Conv2D(128, (4, 4), activation='relu')))
-        model.add(TimeDistributed(MaxPooling2D((2, 2), strides=(2, 2))))
-        model.add(TimeDistributed(Conv2D(256, (4, 4), activation='relu')))
-        model.add(TimeDistributed(MaxPooling2D((2, 2), strides=(2, 2))))
-        # extract features and dropout
-        model.add(TimeDistributed(Flatten()))
-        model.add(Dropout(0.5))
-        # input to LSTM
-        model.add(LSTM(256, return_sequences=False, dropout=0.5))
-        # classifier with sigmoid activation for multilabel
-        model.add(Dense(num_classes, activation='sigmoid'))
-        # compile the model with binary_crossentropy loss for multilabel
-        model.compile(optimizer='rmsprop', loss='binary_crossentropy')
-        # look at the params before training
-        model.summary()
+        x = Conv2D(
+            nb_neuron,
+            (input_data._keras_shape[1], input_data._keras_shape[2]),
+            name='head_conv_1')(input_data)
+        x = BatchNormalization(axis=3, name='head_batchnorm_1')(x)
+        x = Activation('relu')(x)
+
+        x = Conv2D(nb_neuron, (1, 1), name='head_conv_2')(x)
+        x = BatchNormalization(axis=3, name='head_batchnorm_2')(x)
+        x = Activation('relu')(x)
+
+        x = Flatten()(x)
+        x = Dense(num_classes)(x)
+        x = Activation('sigmoid')(x)
+
+        return x
+
+    def load_model(self, **kwargs):
+
+        base = self.load_basemodel(**kwargs)
+        head = self.load_head(plug_on_top=base, **kwargs)
+        model = KerasModel(base.input, head)
 
         return model
-
-    def forward_pass_from_generator(self, generator, N):
-        """
-        Customize the forward pass to ease the dumping
-        of features from an architecture (egg: VGG16).
-        To use instead of **predict_generator**.
-
-        In contrast to predict_generator, this method return not
-        only the prediction, but also the labels, a dictionary that
-        maps the label to their indices and the class mode
-        use.
-        """
-        # forward pass
-        for i in range(N):
-            X_batch, y_batch = generator.next()
-            features = self.model.predict_on_batch(X_batch)
-            labels = y_batch
-
-            yield features, labels

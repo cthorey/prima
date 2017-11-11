@@ -20,7 +20,7 @@ if __name__ == '__main__':
     Train a model for regression
     """
     data = Data(data_name='prima_d1_500')
-    for exp in ['exp0', 'exp1', 'exp2']:
+    for exp in ['exp1', 'exp2']:
         model = Model(
             model_task='video_classification',
             model_name='elegant_heisenberg',

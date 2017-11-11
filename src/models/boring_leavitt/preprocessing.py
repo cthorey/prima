@@ -186,7 +186,7 @@ class VideoDataIterator(Iterator):
                  directory,
                  data_generator,
                  split,
-                 target_size=(16, 64, 64, 3),
+                 target_size=(224, 224, 3),
                  batch_size=32,
                  shuffle=True,
                  seed=None):
@@ -219,20 +219,10 @@ class VideoDataIterator(Iterator):
 
         # build batch of image data
         for i, j in enumerate(index_array):
-            video = self.data.fdata['data'][j]
-            if video.shape[0] != self.target_size[0]:
-                video = video[:self.target_size[0]]
-            if video.shape[1:] != self.target_size[1:]:
-                video = np.stack([
-                    np.array(
-                        Image.fromarray(video[i].astype('uint8')).resize(
-                            self.target_size[1:-1]))
-                    for i in range(len(video))
-                ])
-                video = video.astype('float64')
-
+            video = np.expand_dims(self.data.fdata['data'][j][0], 0)
             video = self.data_generator.random_transform(video)
             video = self.data_generator.standardize(video)
+            video = video[0]
 
             labels = self.data.fdata['labels'][j]
 

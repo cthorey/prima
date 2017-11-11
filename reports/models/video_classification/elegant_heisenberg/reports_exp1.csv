@@ -1,0 +1,2 @@
+dataset,expname,name,train_score,val_score,test_score,ref,report,description,created
+prima_d1_500,exp1,elegant_heisenberg,0.14989922940731049,0.14977405965328217,,clement,[report](https://github.com/cthorey/prima/blob/master/reports/models/video_classification/elegant_heisenberg/exp1.md),benchmark,11/11/2017

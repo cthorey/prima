@@ -12,8 +12,8 @@ from pprint import pprint
 
 import pandas as pd
 from src.data.coco_video import COCOPriMatrix
-from src.models.elegant_heisenberg.preprocessing import (VideoDataGenerator,
-                                                         VideoDataIterator)
+from src.models.boring_leavitt.preprocessing import (VideoDataGenerator,
+                                                     VideoDataIterator)
 
 ROOT_DIR = os.environ['ROOT_DIR']
 

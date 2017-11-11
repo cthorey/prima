@@ -26,6 +26,6 @@
 * Ideas
 
 - Concatenate four image 64 side on to a 224/224 images and pass that into the network
-- Train a model
+- Distributed RESNET50 on 4 images .
 
 
