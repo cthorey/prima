@@ -163,7 +163,7 @@ class PriMatrixInspector(object):
             ref=ref,
             report='[report]({})'.format(
                 ojoin(
-                    'https://github.com/cthorey/{0}/blob/master/reports/{1}/{2}/{3}.md'.
+                    'https://github.com/cthorey/{0}/blob/master/reports/{1}/{2}/{3}/{4}.md'.
                     format(self.project, self.modeltype, self.model.model_task,
                            self.model.model_name, self.model.expname))),
             description=self.model.model_description,
