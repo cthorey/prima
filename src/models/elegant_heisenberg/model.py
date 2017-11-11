@@ -10,6 +10,7 @@ from keras.layers import (Conv2D, Dense, Dropout, Flatten, MaxPooling2D,
                           TimeDistributed)
 from keras.layers.recurrent import LSTM
 from keras.models import Sequential, model_from_json
+from PIL import Image
 from src.models.elegant_heisenberg.preprocessing import VideoDataGenerator
 from tqdm import *
 
@@ -28,7 +29,7 @@ class Model(BaseModel):
                  model_description="",
                  stage='training',
                  bmodel=None,
-                 input_shape=(224, 224, 3),
+                 input_shape=(16, 224, 224, 3),
                  expname=None,
                  weights_file='min',
                  serve_model_from=None,
@@ -42,11 +43,11 @@ class Model(BaseModel):
         self.setup_foldertree()
         self.load_exp(expname, weights_file, bmodel)
 
-    def preprocessing_input(self, arr, prepro_kwargs=None):
+    def preprocessing_input(self, video, prepro_kwargs=None):
         """
         Pre-process a multiview image (i.e. a set of images)
 
-        :param arr: a multiview image
+        :param video: a video
         :param prepro_kwargs:
         :return:
         """
@@ -58,8 +59,19 @@ class Model(BaseModel):
             elif self.experiment['data_config'] is not None:
                 prepro_kwargs = self.experiment.data_config.validation_augmentation
 
+        target_size = self.experiment.data_config.validation_target_size
+        if video.shape[0] != target_size[0]:
+            video = video[:target_size[0]]
+        if video.shape != target_size:
+            video = np.stack([
+                np.array(
+                    Image.fromarray(video[i].astype('uint8')).resize(
+                        target_size[1:-1])) for i in range(len(video))
+            ])
+            video = video.astype('float64')
+
         prepro = VideoDataGenerator(**prepro_kwargs)
-        return prepro.standardize(arr)
+        return prepro.standardize(video)
 
     def decode_predictions(self, y):
         pass
@@ -86,8 +98,7 @@ class Model(BaseModel):
         preds = np.vstack(preds)
         return preds
 
-    def load_model(self, num_frames, width, height, num_classes, *args,
-                   **kwargs):
+    def load_model(self, input_shape, num_classes, *args, **kwargs):
 
         model = Sequential()
 
@@ -95,7 +106,7 @@ class Model(BaseModel):
         model.add(
             TimeDistributed(
                 Conv2D(64, (3, 3), activation='relu'),
-                input_shape=(num_frames, width, height, 3)))
+                input_shape=input_shape))
         model.add(TimeDistributed(MaxPooling2D((2, 2), strides=(1, 1))))
         model.add(TimeDistributed(Conv2D(128, (4, 4), activation='relu')))
         model.add(TimeDistributed(MaxPooling2D((2, 2), strides=(2, 2))))

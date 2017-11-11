@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 
 
-class COCOPriMatrix():
+class COCOPriMatrix(object):
     def __init__(self, annotation_file=None, verbose=False):
         """
         Constructor of COCOPCD helper class for reading and visualizing annotated point cloud.
@@ -151,7 +151,7 @@ class COCOPriMatrix():
         :return: res (obj)         : result api object
         """
         res = COCOPriMatrix()
-        res.dataset['imgs'] = [img for img in self.dataset['imgs']]
+        res.dataset['imgs'] = [img for img in self.dataset['images']]
         if self.verbose:
             print('Loading and preparing results...')
         tic = time.time()
@@ -167,14 +167,20 @@ class COCOPriMatrix():
             imgIds = [img['id'] for img in imgs]
             assert set(imgIds) == (set(imgIds) & set(self.getImgIds())), \
                 'Results do not correspond to current cocopcd set'
-            for id, img in enumerate(imgs):
-                img['id'] = id + 1
-            res.dataset['imgs'] = img
+            res.dataset['images'] = imgs
+
+        res.dataset['info'] = self.dataset['info']
+        res.dataset['info']['fdata_path'] = imgs[0]['fdata_path']
 
         if self.verbose:
             print('DONE (t={:0.2f}s)'.format(time.time() - tic))
 
         res.createIndex()
+        for key, value in res.dataset['info'].items():
+            if self.verbose:
+                print('{}: {}'.format(key, value))
+            setattr(res, key, value)
+        res.fdata = h5py.File(res.fdata_path, "r")
         return res
 
 

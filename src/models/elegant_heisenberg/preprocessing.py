@@ -229,6 +229,7 @@ class VideoDataIterator(Iterator):
                             self.target_size[1:-1]))
                     for i in range(len(video))
                 ])
+                video = video.astype('float64')
 
             video = self.data_generator.random_transform(video)
             video = self.data_generator.standardize(video)

@@ -110,6 +110,7 @@ class DatasetCreator(object):
             os.path.join(ROOT_DIR, 'data', 'raw', 'submission_format.csv'))
         splits = zip(['train', 'validation', 'test'],
                      [train, validation, test])
+        splits = zip(['test'], [test])
         for split, data in splits:
             print('\n' + '-' * 50)
             print('Processing  {}'.format(split))
@@ -211,5 +212,6 @@ class DatasetCreator(object):
 
 
 if __name__ == '__main__':
-    dataset = DatasetCreator('d1', dataset_type='prima', overfit=True)
+    dataset = DatasetCreator(
+        'd1_prima_500_test', dataset_type='prima', overfit=False)
     dataset.create_dataset()

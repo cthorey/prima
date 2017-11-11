@@ -29,10 +29,8 @@ if __name__ == '__main__':
     fit_config = dict(steps_per_epoch=150, epochs=1)
     training_config = dict(
         model_config={
-            'width': data.train.fdata['data'].shape[2],
-            'height': data.train.fdata['data'].shape[3],
-            'num_frames': data.train.fdata['data'].shape[1],
-            'num_classes': len(data.train.cats)
+            'num_classes': len(data.train.cats),
+            'input_shape': (4, 128, 128, 3)
         },
         optimizer='Adam',
         optimizer_config=dict(lr=1e-3, decay=5e-2),
@@ -51,7 +49,7 @@ if __name__ == '__main__':
         write_graph=True,
         write_images=False)
     data_config = dict(
-        base_augmentation=dict(rescale=1. / 255, ),
+        base_augmentation=dict(rescale=1. / 255),
         train_aug_specific=dict(
             rotation_range=15,
             width_shift_range=0.05,
