@@ -1,18 +1,31 @@
 * WORKING PLAN
+   
+** TODO Train a model using RESNET50 instead as a feature extractor
 
-** TODO It should be able to return stuff.
+** TODO Concatenate four frame in to one image and use transfert learning
 
-** TODO Make sur the iterator is working properly
-** TODO Train a model elegant benchmark on the 224/224 images
+** TODO Train a model using only meta data - Start with a neural network.
+
+** TODO Merge the best model using the image with the best using only meta data.
+
+** DONE It should be able to return stuff.
+   CLOSED: [2017-11-11 Sat 19:06]
+
+** DONE Make sur the iterator is working properly
+   CLOSED: [2017-11-11 Sat 19:06]
+** DONE Train a model elegant benchmark on the 224/224 images
+   CLOSED: [2017-11-11 Sat 19:06]
 
    Benchnmark using the same model as the driven data team
 
-** TODO Write an inspector which can easily compute metrics on the validation set.
+** DONE Write an inspector which can easily compute metrics on the validation set.
+   CLOSED: [2017-11-11 Sat 19:06]
 
-** TODO Train a model using VGG16 instead as a feature extractor
+** DONE ADD PARAMETERS TO SELECT AN ARBITRARY NUMBER OF FRAME
 
-   1. Train a model only on the meta data
+* Ideas
 
-** DONE ADD PARAMETERS TO SELECT AN ARBITRARY NUMBER OF FRAMES
-   CLOSED: [2017-11-11 Sat 12:29]
-dezdez
+- Concatenate four image 64 side on to a 224/224 images and pass that into the network
+- Train a model
+
+

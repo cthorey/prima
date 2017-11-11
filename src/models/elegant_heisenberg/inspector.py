@@ -30,7 +30,7 @@ class PriMatrixInspector(object):
         Gen prediction and dump then to disk
         """
         reader = getattr(self.data, split)
-        img_ids = reader.getImgIds()[:100]
+        img_ids = reader.getImgIds()
 
         predictions = self.model.predict(
             image_ids=img_ids,
