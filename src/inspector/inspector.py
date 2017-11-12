@@ -30,14 +30,9 @@ class PriMatrixInspector(object):
         Gen prediction and dump then to disk
         """
         reader = getattr(self.data, split)
-        img_ids = reader.getImgIds()
 
         predictions = self.model.predict(
-            image_ids=img_ids,
-            fdata=reader.fdata['data'],
-            batch_size=batch_size,
-            verbose=True)
-        print(predictions.shape)
+            reader=reader, batch_size=batch_size, verbose=True)
 
         # Writing the detections
         print('Writing the detections in the PriMatrix format')
