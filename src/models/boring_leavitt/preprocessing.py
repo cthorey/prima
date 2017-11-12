@@ -1,3 +1,4 @@
+import time
 from os.path import join as ojoin
 
 from keras.preprocessing.image import *
@@ -200,9 +201,7 @@ class VideoDataIterator(Iterator):
         self.nb_sample = len(self.filenames)
         self.num_classes = len(self.data.cats)
         self.target_size = target_size
-        self.num_frames = self.data.fdata['data'].shape[1]
-        self.width = self.data.fdata['data'].shape[2]
-        self.height = self.data.fdata['data'].shape[3]
+        self.dlabels = self.data.fdata['labels'][:]
 
         super(VideoDataIterator, self).__init__(self.nb_sample, batch_size,
                                                 shuffle, seed)
@@ -218,14 +217,16 @@ class VideoDataIterator(Iterator):
         batch_y = np.zeros((current_batch_size, ) + (len(self.data.cats), ))
 
         # build batch of image data
+        t = time.time()
         for i, j in enumerate(index_array):
-            video = np.expand_dims(self.data.fdata['data'][j][0], 0)
+            t = time.time()
+            image = Image.open(self.data.imgs[j]['fdata_path'])
+            video = np.expand_dims(np.array(image), 0).astype('float')
             video = self.data_generator.random_transform(video)
             video = self.data_generator.standardize(video)
             video = video[0]
 
-            labels = self.data.fdata['labels'][j]
-
+            labels = self.dlabels[j]
             batch_x[i] = video
             batch_y[i] = labels
 

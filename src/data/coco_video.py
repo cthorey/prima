@@ -36,7 +36,10 @@ class COCOPriMatrix(object):
             self.dataset = dataset
             self.createIndex()
             self.info()
-            self.fdata = h5py.File(self.fdata_path, "r")
+            try:
+                self.fdata = h5py.File(self.fdata_path, "r")
+            except:
+                pass
 
     def createIndex(self):
         # create index
@@ -73,9 +76,9 @@ class COCOPriMatrix(object):
                 print('{}: {}'.format(key, value))
             setattr(self, key, value)
 
-    def getVidData(self, video_ids):
-        catNms = catNms if type(catNms) == list else [catNms]
-        pass
+    def getVidData(self, imgid):
+        data = h5py.File(self.imgs[imgid]['fdata_path'], "r")
+        return data
 
     def getCatIds(self, catNms=[], catIds=[]):
         """
@@ -195,10 +198,10 @@ class COCOPriMatrixreator(object):
             os.mkdir(ojoin(self.dest_folder, 'annotations'))
         self.annot = dict()
         self.annot['info'] = dict(
-            fdata_path=fdata_path,
             contributor='clement',
             dataset_type=dataset_type,
             classes=classes,
+            fdata_path=fdata_path,
             data_created=datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
             verson=1.0,
             year=2017)
@@ -227,4 +230,5 @@ class COCOPriMatrixreator(object):
         fname = ojoin(self.dest_folder, 'annotations', '{}.json'.format(
             self.fname))
         json.dump(self.annot, open(fname, 'w+'))
+
         self.fdata.close()
