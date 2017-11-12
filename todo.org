@@ -1,13 +1,16 @@
 * WORKING PLAN
    
-** TODO Train a model using RESNET50 instead as a feature extractor
+  CLOSED: [2017-11-12 Sun 22:14]
+   
+   CLOSED: [2017-11-12 Sun 22:14]
 
 ** TODO Concatenate four frame in to one image and use transfert learning
-
-** TODO Train a model using only meta data - Start with a neural network.
-
 ** TODO Merge the best model using the image with the best using only meta data.
+** TODO Metadata model only loss on the blank category
 
+   
+** DONE Train a model using RESNET50 instead as a feature extractor
+** DONE Train a model using only meta data - Start with a neural network.
 ** DONE It should be able to return stuff.
    CLOSED: [2017-11-11 Sat 19:06]
 

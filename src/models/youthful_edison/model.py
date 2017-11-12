@@ -89,7 +89,7 @@ class Model(BaseModel):
             x = Dropout(dropout)(x)
             x = Activation('relu')(x)
 
-        x = Dense(num_classes, 'classification')(x)
+        x = Dense(num_classes, name='classification')(x)
         x = Activation('sigmoid')(x)
 
         model = KerasModel(input_data, x)

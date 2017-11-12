@@ -157,13 +157,6 @@ class DatasetCreator(object):
             fname='instances_{}'.format(split),
             fdata_path=fdata_path)
 
-        if self.dataset_type == 'nano':
-            s = (len(data), 30, 16, 16, 3)
-        elif self.dataset_type == 'micro':
-            s = (len(data), 30, 64, 64, 3)
-        else:
-            s = (len(data), 16, 224, 224, 3)
-        coco.fdata.create_dataset("data", s)
         coco.fdata.create_dataset("labels", (len(data), len(self.classes)))
         idx = 0
         err = []
