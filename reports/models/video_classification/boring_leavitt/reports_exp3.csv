@@ -1,0 +1,2 @@
+dataset,expname,name,train_score,val_score,test_score,ref,report,description,created
+prima_d1_2000,exp3,boring_leavitt,0.08752626180648804,0.08966299146413803,0.06394083052873611,clement,[report](https://github.com/cthorey/prima/blob/master/reports/models/video_classification/boring_leavitt/exp3.md),VGG16/1FRAME,18/11/2017
