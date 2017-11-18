@@ -19,12 +19,13 @@ if __name__ == '__main__':
     """
     Train a model for regression
     """
-    data = Data(data_name='prima_d1_500_image')
-    for exp in ['exp{}'.format(i) for i in range(3)]:
+    data = Data(data_name='prima_d1_2000')
+    for exp in ['exp4', 'exp3', 'exp6', 'exp5', 'exp14', 'exp9']:
         model = Model(stage='prediction', expname=exp)
         inspector = PriMatrixInspector(data=data, model=model)
         inspector.gen_prediction(split='train', batch_size=32)
         inspector.gen_prediction(split='validation', batch_size=32)
+        inspector.gen_prediction(split='test', batch_size=32)
         inspector.save_report()
     report = Reports(monitor='val_score')
     report.reports2md()

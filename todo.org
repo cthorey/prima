@@ -6,7 +6,7 @@
 
 ** TODO Concatenate four frame in to one image and use transfert learning
 ** TODO Merge the best model using the image with the best using only meta data.
-** DONE Metadata model only loss on the blank category
+i** DONE Metadata model only loss on the blank category
 * hello zrol   CLOSED: [2017-11-18 Sat 11:41]
 
    

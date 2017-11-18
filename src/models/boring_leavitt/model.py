@@ -77,7 +77,7 @@ class Model(BaseModel):
             batch_ids = image_ids[batch_idx]
             X = np.stack([
                 self.preprocessing_input(
-                    Image.open(self.data.imgs[idx]['fdata_path']))
+                    Image.open(reader.imgs[idx]['files'][0]))
                 for idx in batch_ids
             ])
             pred = self.model.predict(X, batch_size=batch_size, verbose=False)
