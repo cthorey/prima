@@ -1,6 +1,9 @@
 class Ensemble(object):
-    def __init__(self, method):
+    def __init__(self, method, stage='training'):
         self.method = method
+
+    def load_ensemble(self, expname):
+        pass
 
     def predict(self, split, models):
         """
