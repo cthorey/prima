@@ -7,10 +7,11 @@
 ** TODO Concatenate four frame in to one image and use transfert learning
 ** TODO Merge the best model using the image with the best using only meta data.
 ** DONE Metadata model only loss on the blank category
-   CLOSED: [2017-11-18 Sat 11:33]
+* hello zrol   CLOSED: [2017-11-18 Sat 11:41]
 
    
 ** DONE Train a model using RESNET50 instead as a feature extractor
+   CLOSED: [2017-11-18 Sat 11:41]
 ** DONE Train a model using only meta data - Start with a neural network.
 ** DONE It should be able to return stuff.
    CLOSED: [2017-11-11 Sat 19:06]
