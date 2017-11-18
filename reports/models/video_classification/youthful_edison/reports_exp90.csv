@@ -1,0 +1,2 @@
+dataset,expname,name,train_score,val_score,test_score,ref,report,description,created
+prima_d1_500_image,exp90,youthful_edison,0.14978958666324615,0.14940182864665985,,clement,[report](https://github.com/cthorey/prima/blob/master/reports/models/video_classification/youthful_edison/exp90.md),meta data model,13/11/2017

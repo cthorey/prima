@@ -6,7 +6,7 @@
 - model description : meta data model 
 - experiment : exp1 
 - model folder : /workdir/models/video_classification/youthful_edison 
-- creation time : 12/11/2017 
+- creation time : 13/11/2017 
 
 # Best model - training summary 
 
@@ -18,9 +18,9 @@
 
 ## Validation set 
 
-|     bird |    blank |    cattle |   chimpanzee |   elephant |   forest buffalo |   gorilla |   hippopotamus |    human |     hyena |   large ungulate |   leopard |        lion |   other (non-primate) |   other (primate) |   pangolin |   porcupine |     reptile |   rodent |   small antelope |   small cat |   wild dog |   duiker |      hog |
-|---------:|---------:|----------:|-------------:|-----------:|-----------------:|----------:|---------------:|---------:|----------:|-----------------:|----------:|------------:|----------------------:|------------------:|-----------:|------------:|------------:|---------:|-----------------:|------------:|-----------:|---------:|---------:|
-| 0.291271 | 0.317023 | 0.0884008 |     0.318157 |   0.211598 |        0.0060415 | 0.0412961 |      0.0619116 | 0.208805 | 0.0196964 |        0.0588298 | 0.0604615 | 7.19022e-06 |              0.283179 |          0.308954 |  0.0244422 |    0.136324 | 1.65587e-05 | 0.290419 |        0.0657182 |   0.0106677 | 0.00912391 | 0.263729 | 0.270315 |
+|     bird |    blank |    cattle |   chimpanzee |   elephant |   forest buffalo |   gorilla |   hippopotamus |    human |     hyena |   large ungulate |   leopard |       lion |   other (non-primate) |   other (primate) |   pangolin |   porcupine |    reptile |   rodent |   small antelope |   small cat |   wild dog |   duiker |      hog |
+|---------:|---------:|----------:|-------------:|-----------:|-----------------:|----------:|---------------:|---------:|----------:|-----------------:|----------:|-----------:|----------------------:|------------------:|-----------:|------------:|-----------:|---------:|-----------------:|------------:|-----------:|---------:|---------:|
+| 0.291273 | 0.317082 | 0.0884003 |     0.318145 |   0.211596 |       0.00604149 | 0.0412998 |      0.0619065 | 0.207977 | 0.0196963 |         0.058824 | 0.0604602 | 7.1926e-06 |               0.28316 |          0.308963 |  0.0244399 |    0.136304 | 1.6547e-05 | 0.290414 |        0.0657068 |   0.0106655 | 0.00912361 |  0.26373 | 0.270317 |
 
 
 
