@@ -45,7 +45,7 @@ class DatasetCreator(object):
         if split_idd is True, then take every frame as idpt
         if not, take into acocunt the time.
         """
-        N = 1500
+        N = 2000
         cls = df.columns[1:].tolist()
         dfs = []
         for cl in cls:
@@ -73,9 +73,8 @@ class DatasetCreator(object):
             if overwrite:
                 shutil.rmtree(self.dest_folder)
             else:
-                raise ValueError(
-                    'Dataset {} already exist but overwrite set to False'.
-                    format(self.data_name))
+                print('Dataset {} already exist but overwrite set to False'.
+                      format(self.data_name))
         self._mkdir_recursive(self.dest_folder)
         self._mkdir_recursive(ojoin(self.dest_folder, 'annotations'))
         self._mkdir_recursive(ojoin(self.dest_folder, 'images'))
@@ -90,7 +89,7 @@ class DatasetCreator(object):
         if not os.path.exists(path):
             os.mkdir(path)
 
-    def create_dataset(self, overwrite=True):
+    def create_dataset(self, overwrite=False):
         '''
         Literrally create the dataset.
         If df is provided, use it directly,
@@ -108,8 +107,6 @@ class DatasetCreator(object):
 
         test = pd.read_csv(
             os.path.join(ROOT_DIR, 'data', 'raw', 'submission_format.csv'))
-        splits = zip(['train', 'validation', 'test'],
-                     [train, validation, test])
         splits = zip(['test'], [test])
         for split, data in splits:
             print('\n' + '-' * 50)
@@ -163,7 +160,7 @@ class DatasetCreator(object):
 
         total = len(data)
         if self.overfit:
-            total = 50
+            total = 5
         for i, row in tqdm(data.iterrows(), total=total):
             img = dict()
             img['id'] = idx
@@ -185,13 +182,20 @@ class DatasetCreator(object):
                 print(p, file=sys.stderr)
                 print(e, file=sys.stderr)
                 continue
-            coco.fdata['data'][idx] = video
+
+            fpaths = []
+            for i in range(len(video)):
+                fpath = ojoin(self.dest_folder, 'images',
+                              '{}_{}_{}.jpg'.format(split, idx, i))
+                Image.fromarray(video[i].astype('uint8')).save(fpath)
+                fpaths.append(fpath)
+            img['files'] = fpaths
             img['meta_data'] = meta_data
             img['video_path'] = p
             img['nframes'] = video.shape[0]
             img['height'] = video.shape[1]
             img['width'] = video.shape[2]
-            img['fdata_path'] = fdata_path
+
             coco.update_images(**img)
             idx += 1
 
@@ -201,10 +205,8 @@ class DatasetCreator(object):
 
             # Dump annotations
         coco.dump_annotations()
-        print(err)
 
 
 if __name__ == '__main__':
-    dataset = DatasetCreator(
-        'd1_prima_500_test', dataset_type='prima', overfit=False)
+    dataset = DatasetCreator('d1_2000', dataset_type='prima', overfit=False)
     dataset.create_dataset()

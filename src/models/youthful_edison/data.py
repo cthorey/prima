@@ -53,12 +53,9 @@ class Data(object):
                 print('\n')
 
     def init_generator(self,
-                       dummy_keys=[
-                           'coded_height', 'coded_width', 'level', 'nb_frames',
-                           'start_time', 'duration'
-                       ],
+                       dummy_keys=[],
                        dummy_pca=10,
-                       real_keys=['bit_rate', 'size'],
+                       real_keys=[],
                        real_scaler='RobustScaler',
                        normalize=True):
         kwargs = {

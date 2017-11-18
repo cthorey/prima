@@ -43,13 +43,9 @@ class Model(BaseModel):
         self.setup_foldertree()
         self.load_exp(expname, weights_file, bmodel)
 
-    def preprocessing_input(self, video, prepro_kwargs=None):
+    def preprocessing_input(self, image, prepro_kwargs=None):
         """
         Pre-process a multiview image (i.e. a set of images)
-
-        :param video: a video
-        :param prepro_kwargs:
-        :return:
         """
         if prepro_kwargs is None:
             assert hasattr(self,
@@ -60,27 +56,17 @@ class Model(BaseModel):
                 prepro_kwargs = self.experiment.data_config.validation_augmentation
 
         target_size = self.experiment.data_config.validation_target_size
-        if video.shape[0] != target_size[0]:
-            video = video[:target_size[0]]
-        if video.shape != target_size:
-            video = np.stack([
-                np.array(
-                    Image.fromarray(video[i].astype('uint8')).resize(
-                        target_size[1:-1])) for i in range(len(video))
-            ])
-            video = video.astype('float64')
-
+        video = np.expand_dims(np.array(image), 0).astype('float')
         prepro = VideoDataGenerator(**prepro_kwargs)
-        return prepro.standardize(video)
+        video = prepro.standardize(video)
+        return video[0]
 
     def decode_predictions(self, y):
         pass
 
-    def predict(self, image_ids, fdata, batch_size, verbose=False):
-        if type(image_ids) != list:
-            image_ids = [image_ids]
+    def predict(self, reader, batch_size, verbose=False):
 
-        image_ids = np.array(image_ids)
+        image_ids = np.array(reader.getImgIds())
 
         N = len(image_ids) / batch_size
         idxs = range(len(image_ids))
@@ -89,10 +75,12 @@ class Model(BaseModel):
         for batch_idx in tqdm(
                 chunked_iter(idxs, size=batch_size), disable=dis, total=N):
             batch_ids = image_ids[batch_idx]
-            X = np.stack(
-                [self.preprocessing_input(fdata[idx]) for idx in batch_ids])
-            pred = self.model.predict_proba(
-                X, batch_size=batch_size, verbose=False)
+            X = np.stack([
+                self.preprocessing_input(
+                    Image.open(self.data.imgs[idx]['fdata_path']))
+                for idx in batch_ids
+            ])
+            pred = self.model.predict(X, batch_size=batch_size, verbose=False)
             pred = np.hstack((batch_ids.reshape(-1, 1), pred))
             preds.append(pred)
         preds = np.vstack(preds)

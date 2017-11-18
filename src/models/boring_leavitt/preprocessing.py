@@ -220,7 +220,8 @@ class VideoDataIterator(Iterator):
         t = time.time()
         for i, j in enumerate(index_array):
             t = time.time()
-            image = Image.open(self.data.imgs[j]['fdata_path'])
+            image = Image.open(self.data.imgs[j]['fdata_path']).resize(
+                self.target_size[:-1])
             video = np.expand_dims(np.array(image), 0).astype('float')
             video = self.data_generator.random_transform(video)
             video = self.data_generator.standardize(video)
