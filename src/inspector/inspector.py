@@ -1,3 +1,4 @@
+import datetime
 import json
 import os
 import pprint
@@ -64,6 +65,30 @@ class PriMatrixInspector(object):
         output_file = ojoin(self.model.model_folder, output_name)
         json.dump(jsondump, open(output_file, 'w+'))
         return df
+
+    def gen_submission(self):
+        resFile = ojoin(self.model.model_folder, '{}_{}_preds.json'.format(
+            self.model.expname, 'test'))
+        Gt = getattr(self.data, 'test')
+        Dt = Gt.loadRes(resFile)
+        preds = pd.DataFrame(
+            Dt.fdata['preds'][Dt.getImgIds()], columns=Dt.classes)
+        preds['filename'] = [
+            f['video_id'] for f in Gt.loadImgs(Gt.getImgIds())
+        ]
+        preds = preds.set_index('filename')
+        test = pd.read_csv(
+            os.path.join(ROOT_DIR, 'data', 'raw', 'submission_format.csv'))
+        test = test.set_index('filename')
+        test.loc[preds.index, :] = preds
+        test['filename'] = test.index
+        test.index = range(len(test))
+
+        self._mkdir_recursive(ojoin(ROOT_DIR, 'submissions'))
+        submission_name = 'submission_{}.csv'.format(
+            datetime.datetime.now().strftime("%Y-%m-%d_%H:%M"))
+        test.to_csv(ojoin(ROOT_DIR, 'submissions', submission_name))
+        return test
 
     def gen_score(self, split='train', verbose=True):
 
